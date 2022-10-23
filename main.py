@@ -7,6 +7,15 @@ import openpyxl
 import random
 import math
 from PyQt5.QtGui import QMovie
+import time
+import board
+import busio
+import adafruit_scd30
+
+# SCD-30 has tempremental I2C with clock stretching, datasheet recommends
+# starting at 50KHz
+i2c = busio.I2C(board.SCL, board.SDA, frequency=50000)
+scd = adafruit_scd30.SCD30(i2c)
 
 
 #initialize starting tree list
@@ -139,7 +148,7 @@ class FinalTree(QDialog):
         #self.NPK.setVisible(True)
 
         #PH
-        rngPH = random.uniform(3.0,11.0)       
+        rngPH = round(random.uniform(3.0,11.0), 2)     
         count = 0
         for i in treeListFull:
             avgPH = (phMax[count] + phMin[count])/2.0
@@ -158,8 +167,11 @@ class FinalTree(QDialog):
         #self.camera.setVisible(True)
 
         #CO2
-        #self.loading4.setVisible(False)
-        #self.co2.setVisible(True)
+        co2ppm = 780
+        if scd.data_available:
+            co2ppm = round(scd.CO2, 2)
+        self.loading3.setVisible(False)
+        self.co2.setVisible(True)
 
         finalTreeList = []
         for i in range(len(treeList)):
@@ -182,6 +194,7 @@ class FinalTree(QDialog):
         self.tree4.setText(topFive[3])
         self.tree5.setText(topFive[4])
 
+        self.co2.setText(str(co2ppm)+"ppm")
         self.PH.setText(str(rngPH))
 
 
