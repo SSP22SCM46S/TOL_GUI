@@ -144,8 +144,13 @@ class FinalTree(QDialog):
         #self.movie.stop()
 
         #NPK
-        #self.loading1.setVisible(False)
-        #self.NPK.setVisible(True)
+        nitrogen = random.randint(50,75)
+        potassium = random.randint(36,50)
+        phosphorus = random.randint(131,175)
+        npkVal = str(nitrogen) + " / " + str(phosphorus) + " / " + str(potassium) + " (mg/kg)"
+
+        self.loading1.setVisible(False)
+        self.NPK.setVisible(True)
 
         #PH
         rngPH = round(random.uniform(3.0,11.0), 2)     
@@ -196,7 +201,7 @@ class FinalTree(QDialog):
 
         self.co2.setText(str(co2ppm)+"ppm")
         self.PH.setText(str(rngPH))
-
+        self.NPK.setText(npkVal)
 
         self.upload_button.clicked.connect(self.gotoLogin)
     def gotoLogin(self):
